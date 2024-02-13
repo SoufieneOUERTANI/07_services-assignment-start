@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { UsersService } from './users.service';
+import { UsersLogging } from './users.logging';
 
 @Component({
   selector: 'app-root',
@@ -6,16 +8,22 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  activeUsers = ['Max', 'Anna'];
-  inactiveUsers = ['Chris', 'Manu'];
 
-  onSetToInactive(id: number) {
-    this.inactiveUsers.push(this.activeUsers[id]);
-    this.activeUsers.splice(id, 1);
+
+  activeUsers: any [] = [];
+  inactiveUsers: any [] = [];
+  countSwith : number;
+
+  constructor(private usersService : UsersService, private usersLogging : UsersLogging ){}
+
+  ngOnInit(){
+    this.activeUsers = this.usersService.activeUsers;
+    this.inactiveUsers = this.usersService.inactiveUsers;
+    this.countSwith = this.usersLogging.countSwith;
+
+    this.usersLogging.countUpdates.subscribe(
+      (count:number) => this.countSwith= count
+    )
   }
 
-  onSetToActive(id: number) {
-    this.activeUsers.push(this.inactiveUsers[id]);
-    this.inactiveUsers.splice(id, 1);
-  }
 }
